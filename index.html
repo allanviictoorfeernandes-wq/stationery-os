@@ -3,147 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StationeryOS Pro | Produção Criativa</title>
+    <title>StationeryOS | Gestão de Produção</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #fdfaf7; --kraft: #e6ccb2; --accent: #bc6c25;
-            --pink: #ffddd2; --blue: #bde0fe; --green: #ccffde;
-            --text: #5e503f; --radius: 16px;
+            /* Paleta Papelaria Craft/Pastel */
+            --bg-canvas: #fdfaf7; /* Off-white papel */
+            --kraft: #e6ccb2;
+            --pink-pastel: #ffddd2;
+            --blue-serenity: #bde0fe;
+            --green-mint: #ccffde;
+            --text-main: #5e503f;
+            --text-muted: #8d8172;
+            --accent: #bc6c25; /* Tom terracota/kraft escuro */
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', sans-serif; }
-        body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
 
-        /* Sidebar Sidebar */
-        aside { width: 260px; background: #fff; border-right: 2px solid var(--kraft); padding: 2rem 1.5rem; display: flex; flex-direction: column; }
-        .nav-item { padding: 1rem; border-radius: 12px; cursor: pointer; font-weight: 700; margin-bottom: 0.5rem; transition: 0.3s; display: flex; align-items: center; gap: 10px; color: var(--text); }
-        .nav-item:hover { background: var(--bg); }
-        .nav-item.active { background: var(--pink); color: #d66d6d; }
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
 
-        /* Main */
-        main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        header { padding: 1.5rem 2.5rem; background: #fff; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--kraft); }
-        .view { display: none; padding: 2rem; flex: 1; overflow-y: auto; animation: fadeIn 0.4s; }
-        .view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Header */
+        header {
+            padding: 1.5rem 3rem;
+            background: #fff;
+            border-bottom: 2px solid var(--kraft);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
 
-        /* Kanban Layout */
-        .kanban { display: flex; gap: 1.5rem; align-items: flex-start; }
-        .col { background: rgba(230,204,178,0.2); min-width: 280px; border-radius: var(--radius); padding: 1rem; border: 1px dashed var(--kraft); }
-        .card { background: #fff; border-radius: 12px; padding: 1.2rem; margin-bottom: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.03); cursor: grab; position: relative; border: 1px solid transparent; }
-        .card:hover { border-color: var(--accent); }
+        .logo { font-weight: 800; font-size: 1.6rem; color: var(--accent); letter-spacing: -0.5px; }
+        .logo span { color: var(--text-muted); font-weight: 400; }
 
-        /* Stats */
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
-        .stat-box { background: #fff; padding: 1.5rem; border-radius: var(--radius); border: 2px solid var(--kraft); }
+        .btn-new {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(188, 108, 37, 0.2);
+        }
+
+        .btn-new:hover { transform: scale(1.05); filter: brightness(1.1); }
+
+        /* Kanban Board */
+        .board {
+            display: flex;
+            gap: 1.5rem;
+            padding: 2rem 3rem;
+            flex: 1;
+            overflow-x: auto;
+            align-items: flex-start;
+        }
+
+        .column {
+            background: rgba(230, 204, 178, 0.3); /* Kraft translúcido */
+            min-width: 300px;
+            width: 300px;
+            border-radius: var(--radius);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            max-height: 100%;
+            border: 1px dashed var(--kraft);
+        }
+
+        .column-header {
+            padding: 0.5rem 0.5rem 1rem;
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--accent);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .column-count {
+            background: var(--kraft);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+
+        .drop-zone {
+            flex: 1;
+            min-height: 150px;
+        }
+
+        /* Pedido Card */
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+            cursor: grab;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid #f1f1f1;
+            position: relative;
+        }
+
+        .card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+        .card:active { cursor: grabbing; }
+
+        .card-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: var(--pink-pastel);
+            padding: 3px 10px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 0.8rem;
+        }
+
+        .card-title { font-weight: 800; font-size: 1.1rem; margin-bottom: 0.4rem; color: #444; }
+        .card-details { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 1rem; }
         
-        .btn-action { background: var(--accent); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 50px; font-weight: 700; cursor: pointer; }
-        #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(5px); z-index: 100; justify-content: center; align-items: center; }
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f9f9f9;
+            padding-top: 0.8rem;
+            margin-top: 0.8rem;
+        }
+
+        .card-deadline { font-size: 0.75rem; font-weight: 600; color: var(--accent); }
+
+        .btn-notify {
+            background: var(--blue-serenity);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #4a90e2;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-notify:hover { background: #96d1ff; }
+
+        .btn-del {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #eee;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        .btn-del:hover { color: var(--danger); }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(94, 80, 63, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            width: 450px;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .form-group { margin-bottom: 1.2rem; }
+        label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.5rem; }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--kraft);
+            border-radius: 10px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+        input:focus { border-color: var(--accent); }
+
+        .modal-actions { display: flex; gap: 1rem; margin-top: 2rem; }
+        .btn-cancel { background: #f5f5f5; flex: 1; border: none; padding: 0.8rem; border-radius: 10px; cursor: pointer; font-weight: 700; }
+        .btn-save { background: var(--accent); color: white; flex: 2; border: none; padding: 0.8rem; border-radius: 10px; cursor: pointer; font-weight: 700; }
+
+        /* Drag Over Highlight */
+        .drop-zone--over { background: rgba(188, 108, 37, 0.05); border-radius: var(--radius); }
     </style>
 </head>
 <body>
 
-    <aside>
-        <h2 style="color: var(--accent); margin-bottom: 2rem">StationeryOS</h2>
-        <div class="nav-item active" onclick="show('kanban', this)">📋 Produção</div>
-        <div class="nav-item" onclick="show('orders', this)">📑 Pedidos</div>
-        <div class="nav-item" onclick="show('reports', this)">📊 BI & Vendas</div>
-    </aside>
+    <header>
+        <div class="logo">Stationery<span>OS</span></div>
+        <button class="btn-new" onclick="toggleModal(true)">+ Novo Pedido</button>
+    </header>
 
-    <main>
-        <header>
-            <h2 id="title">Fila de Produção</h2>
-            <button class="btn-action" onclick="document.getElementById('modal').style.display='flex'">+ Novo Pedido</button>
-        </header>
-
-        <section id="v-kanban" class="view active">
-            <div class="kanban">
-                <div class="col" id="col-new"><h3>Novos</h3><div class="drop" id="new" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
-                <div class="col" id="col-prod"><h3>Produção</h3><div class="drop" id="prod" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
-                <div class="col" id="col-ready"><h3>Prontos</h3><div class="drop" id="ready" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
-            </div>
-        </section>
-
-        <section id="v-reports" class="view">
-            <div class="stats-grid">
-                <div class="stat-box"><small>TOTAL EM PRODUÇÃO</small><h2 id="st-count">0</h2></div>
-                <div class="stat-box"><small>VALOR EM CARTEIRA</small><h2 id="st-val">R$ 0,00</h2></div>
-                <div class="stat-box"><small>ENTREGUES</small><h2 id="st-done">0</h2></div>
-            </div>
-            <div style="background:#fff; padding: 2rem; border-radius: var(--radius)">
-                <h4>Produtividade da Semana</h4>
-                <p style="color: var(--accent)">Aqui entrarão seus gráficos de vendas em breve!</p>
-            </div>
-        </section>
-
-        <section id="v-orders" class="view">
-            <div style="background:#fff; border-radius: var(--radius); padding: 1rem">
-                <table style="width:100%; text-align:left">
-                    <thead><tr><th>ID</th><th>Cliente</th><th>Produto</th><th>Prazo</th></tr></thead>
-                    <tbody id="list-body"></tbody>
-                </table>
-            </div>
-        </section>
+    <main class="board">
+        <div class="column" data-status="novos">
+            <div class="column-header">Novos Pedidos <span class="column-count" id="count-novos">0</span></div>
+            <div class="drop-zone" id="novos"></div>
+        </div>
+        <div class="column" data-status="producao">
+            <div class="column-header">Em Produção <span class="column-count" id="count-producao">0</span></div>
+            <div class="drop-zone" id="producao"></div>
+        </div>
+        <div class="column" data-status="acabamento">
+            <div class="column-header">Montagem/Acabamento <span class="column-count" id="count-acabamento">0</span></div>
+            <div class="drop-zone" id="acabamento"></div>
+        </div>
+        <div class="column" data-status="envio">
+            <div class="column-header">Pronto para Envio <span class="column-count" id="count-envio">0</span></div>
+            <div class="drop-zone" id="envio"></div>
+        </div>
     </main>
 
-    <div id="modal">
-        <div style="background:#fff; padding: 2rem; border-radius: 20px; width: 400px">
-            <h3>Cadastrar Pedido</h3>
-            <input type="text" id="c" placeholder="Nome do Cliente" style="width:100%; margin: 1rem 0; padding: 0.8rem">
-            <input type="number" id="v" placeholder="Valor do Pedido (R$)" style="width:100%; margin-bottom: 1rem; padding: 0.8rem">
-            <input type="text" id="p" placeholder="Produto (Ex: Agenda)" style="width:100%; margin-bottom: 1rem; padding: 0.8rem">
-            <button class="btn-action" onclick="add()">Lançar Produção</button>
-            <button onclick="document.getElementById('modal').style.display='none'">Sair</button>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 1.5rem; color: var(--accent)">Entrada de Produção</h2>
+            <form id="orderForm">
+                <div class="form-group">
+                    <label>CLIENTE</label>
+                    <input type="text" id="clientName" placeholder="Nome completo" required>
+                </div>
+                <div class="form-group">
+                    <label>E-MAIL DO CLIENTE</label>
+                    <input type="email" id="clientEmail" placeholder="cliente@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>PRODUTO</label>
+                    <select id="productType">
+                        <option value="Agenda 2024">Agenda 2024</option>
+                        <option value="Planner Mensal">Planner Mensal</option>
+                        <option value="Caderno Personalizado">Caderno Personalizado</option>
+                        <option value="Bloco de Notas">Bloco de Notas</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>DETALHES DA PERSONALIZAÇÃO</label>
+                    <textarea id="details" rows="3" placeholder="Ex: Capa Floral, Nome em Dourado..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>PRAZO DE ENTREGA</label>
+                    <input type="date" id="deadline" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="toggleModal(false)">Voltar</button>
+                    <button type="submit" class="btn-save">Lançar na Fila</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script>
-        let db = JSON.parse(localStorage.getItem('sos_db')) || [];
+        // CONFIGURAÇÃO DE E-MAIL PADRÃO
+        // Altere a variável abaixo para o nome da sua empresa/marca
+        const NOME_EMPRESA = "Papelaria Criativa";
 
-        function show(v, el) {
-            document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
-            document.getElementById('v-'+v).classList.add('active');
-            el.classList.add('active');
-            render();
+        let orders = JSON.parse(localStorage.getItem('stationery_orders')) || [];
+
+        function toggleModal(show) {
+            document.getElementById('modal').style.display = show ? 'flex' : 'none';
+            if(!show) document.getElementById('orderForm').reset();
         }
 
-        function add() {
-            db.push({id: 'ID'+Date.now(), name: document.getElementById('c').value, val: parseFloat(document.getElementById('v').value), prod: document.getElementById('p').value, status: 'new'});
-            localStorage.setItem('sos_db', JSON.stringify(db));
-            document.getElementById('modal').style.display='none';
-            render();
-        }
-
-        function allowDrop(e) { e.preventDefault(); }
-        function drag(e) { e.dataTransfer.setData("id", e.target.id); }
-        function drop(e) {
+        document.getElementById('orderForm').onsubmit = (e) => {
             e.preventDefault();
-            const id = e.dataTransfer.getData("id");
-            const status = e.target.closest('.drop').id;
-            db = db.map(x => x.id === id ? {...x, status} : x);
-            localStorage.setItem('sos_db', JSON.stringify(db));
+            const newOrder = {
+                id: 'ORD-' + Math.floor(Math.random() * 9000 + 1000),
+                client: document.getElementById('clientName').value,
+                email: document.getElementById('clientEmail').value,
+                product: document.getElementById('productType').value,
+                details: document.getElementById('details').value,
+                deadline: document.getElementById('deadline').value,
+                status: 'novos'
+            };
+            orders.push(newOrder);
+            saveAndRender();
+            toggleModal(false);
+        };
+
+        function notifyClient(id) {
+            const order = orders.find(o => o.id === id);
+            const statusMap = {
+                'novos': 'Recebemos seu pedido e ele já está na nossa fila!',
+                'producao': 'Boas notícias! Seu pedido entrou na fase de impressão e corte.',
+                'acabamento': 'Fase final! Estamos cuidando da montagem e acabamento do seu item.',
+                'envio': 'Seu pedido está pronto e sendo preparado para o envio!'
+            };
+
+            const subject = `Status do Pedido ${order.id} - ${NOME_EMPRESA}`;
+            const body = `Olá, ${order.client}!\n\nPassando para informar que seu pedido (${order.product}) mudou de fase.\n\nStatus Atual: ${statusMap[order.status]}\n\nObrigado por escolher a ${NOME_EMPRESA}!`;
+            
+            window.location.href = `mailto:${order.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+
+        function deleteOrder(id) {
+            if(confirm('Deseja remover este pedido da produção?')) {
+                orders = orders.filter(o => o.id !== id);
+                saveAndRender();
+            }
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('stationery_orders', JSON.stringify(orders));
             render();
         }
 
         function render() {
-            document.querySelectorAll('.drop').forEach(d => d.innerHTML = '');
-            let val = 0; let done = 0;
+            document.querySelectorAll('.drop-zone').forEach(dz => dz.innerHTML = '');
             
-            db.forEach(item => {
+            orders.forEach(order => {
                 const card = document.createElement('div');
-                card.className = 'card'; card.id = item.id; card.draggable = true; card.ondragstart = drag;
-                card.innerHTML = `<b>${item.name}</b><br><small>${item.prod}</small><br><b>R$ ${item.val}</b>`;
-                document.getElementById(item.status).appendChild(card);
-                if(item.status !== 'ready') val += item.val; else done++;
+                card.className = 'card';
+                card.draggable = true;
+                card.id = order.id;
+                card.innerHTML = `
+                    <button class="btn-del" onclick="deleteOrder('${order.id}')">×</button>
+                    <span class="card-tag">${order.product}</span>
+                    <div class="card-title">${order.client}</div>
+                    <div class="card-details">${order.details}</div>
+                    <div class="card-footer">
+                        <div class="card-deadline">📅 ${order.deadline.split('-').reverse().join('/')}</div>
+                        <button class="btn-notify" onclick="notifyClient('${order.id}')">Notificar</button>
+                    </div>
+                `;
+
+                card.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', order.id);
+                });
+
+                document.getElementById(order.status).appendChild(card);
             });
 
-            document.getElementById('st-count').innerText = db.filter(x => x.status !== 'ready').length;
-            document.getElementById('st-val').innerText = val.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
-            document.getElementById('st-done').innerText = done;
-            
-            document.getElementById('list-body').innerHTML = db.map(x => `<tr><td>${x.id}</td><td>${x.name}</td><td>${x.prod}</td><td>Aberto</td></tr>`).join('');
+            // Update counters
+            ['novos', 'producao', 'acabamento', 'envio'].forEach(status => {
+                document.getElementById(`count-${status}`).innerText = orders.filter(o => o.status === status).length;
+            });
         }
+
+        // Drag and Drop Logic
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                zone.classList.add('drop-zone--over');
+            });
+
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('drop-zone--over');
+            });
+
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.classList.remove('drop-zone--over');
+                const id = e.dataTransfer.getData('text/plain');
+                const newStatus = zone.id;
+                
+                orders = orders.map(o => o.id === id ? { ...o, status: newStatus } : o);
+                saveAndRender();
+            });
+        });
+
         render();
     </script>
 </body>
