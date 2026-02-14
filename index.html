@@ -718,6 +718,259 @@
             transform: translateY(0);
         }
 
+        /* === CONTENT VIEWS === */
+        .content-view {
+            padding: 2.5rem 3rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .view-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .view-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .view-header p {
+            color: var(--sage-dark);
+            font-size: 0.95rem;
+        }
+
+        /* === CLIENTES === */
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .client-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-paper);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: var(--transition);
+        }
+
+        .client-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lift);
+        }
+
+        .client-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .client-stats {
+            display: flex;
+            gap: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            font-size: 0.85rem;
+        }
+
+        .client-stat span {
+            display: block;
+            color: var(--sage-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .client-stat strong {
+            font-size: 1.1rem;
+            color: var(--charcoal);
+        }
+
+        /* === RELATÓRIOS === */
+        .reports-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-paper);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lift);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            flex-shrink: 0;
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--navy);
+            opacity: 0.7;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--charcoal);
+        }
+
+        .btn-export {
+            background: linear-gradient(135deg, var(--sage) 0%, var(--sage-dark) 100%);
+            color: white;
+            border: none;
+            padding: 0.9rem 1.75rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-paper);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-export:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lift);
+        }
+
+        .reports-table {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-paper);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .reports-table h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            margin-bottom: 1.5rem;
+            color: var(--charcoal);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--kraft-light);
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            color: var(--charcoal);
+        }
+
+        tbody tr:hover {
+            background: rgba(156, 175, 136, 0.05);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .status-novos { background: var(--blush); color: white; }
+        .status-producao { background: var(--terracotta); color: white; }
+        .status-acabamento { background: var(--sage); color: white; }
+        .status-pronto { background: var(--gold); color: white; }
+
+        /* === CONFIGURAÇÕES === */
+        .settings-container {
+            max-width: 800px;
+        }
+
+        .settings-group {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-paper);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-group h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--charcoal);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--terracotta) 0%, #B85F53 100%);
+            color: white;
+            border: none;
+            padding: 0.9rem 1.75rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-paper);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lift);
+        }
+
         /* === RESPONSIVE === */
         @media (max-width: 1024px) {
             aside {
@@ -814,19 +1067,19 @@
         </div>
 
         <nav class="nav-menu">
-            <a class="nav-item active">
+            <a class="nav-item active" onclick="showView('producao')">
                 <span>📦</span>
                 <span>Produção</span>
             </a>
-            <a class="nav-item">
+            <a class="nav-item" onclick="showView('clientes')">
                 <span>💎</span>
                 <span>Clientes</span>
             </a>
-            <a class="nav-item">
+            <a class="nav-item" onclick="showView('relatorios')">
                 <span>📊</span>
                 <span>Relatórios</span>
             </a>
-            <a class="nav-item">
+            <a class="nav-item" onclick="showView('configuracoes')">
                 <span>⚙️</span>
                 <span>Configurações</span>
             </a>
@@ -857,7 +1110,7 @@
             </button>
         </header>
 
-        <section class="kanban-container">
+        <section id="view-producao" class="kanban-container">
             <div class="column" data-status="novos">
                 <div class="column-header">
                     <span>Novos Pedidos</span>
@@ -888,6 +1141,130 @@
                     <span class="count-badge">0</span>
                 </div>
                 <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
+            </div>
+        </section>
+
+        <!-- VIEW: CLIENTES -->
+        <section id="view-clientes" class="content-view" style="display: none;">
+            <div class="view-header">
+                <div>
+                    <h2>Gestão de Clientes</h2>
+                    <p>Lista completa de clientes e histórico de pedidos</p>
+                </div>
+            </div>
+            <div class="clients-grid" id="clientsGrid"></div>
+        </section>
+
+        <!-- VIEW: RELATÓRIOS -->
+        <section id="view-relatorios" class="content-view" style="display: none;">
+            <div class="view-header">
+                <div>
+                    <h2>Relatórios e Análises</h2>
+                    <p>Exportação e visualização de dados de vendas</p>
+                </div>
+                <button class="btn-export" onclick="exportReport()">
+                    <span>📥</span> Exportar Relatório
+                </button>
+            </div>
+            
+            <div class="reports-stats">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: var(--blush);">💰</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Receita Total</span>
+                        <strong class="stat-value" id="total-revenue">R$ 0,00</strong>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: var(--sage);">📦</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Pedidos Concluídos</span>
+                        <strong class="stat-value" id="completed-orders">0</strong>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: var(--terracotta);">⏳</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Em Andamento</span>
+                        <strong class="stat-value" id="ongoing-orders">0</strong>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: var(--gold);">📊</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Ticket Médio</span>
+                        <strong class="stat-value" id="avg-ticket">R$ 0,00</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reports-table">
+                <h3>Histórico de Pedidos</h3>
+                <div class="table-container">
+                    <table id="ordersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Data</th>
+                                <th>Cliente</th>
+                                <th>Produto</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th>Prazo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: CONFIGURAÇÕES -->
+        <section id="view-configuracoes" class="content-view" style="display: none;">
+            <div class="view-header">
+                <div>
+                    <h2>Configurações do Sistema</h2>
+                    <p>Personalize sua experiência no StationeryOS</p>
+                </div>
+            </div>
+            
+            <div class="settings-container">
+                <div class="settings-group">
+                    <h3>Informações da Empresa</h3>
+                    <div class="form-group">
+                        <label for="empresa-nome">Nome da Empresa</label>
+                        <input type="text" id="empresa-nome" value="Papelaria Criativa Premium">
+                    </div>
+                    <div class="form-group">
+                        <label for="empresa-email">E-mail de Contato</label>
+                        <input type="email" id="empresa-email" placeholder="contato@suaempresa.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="empresa-telefone">Telefone</label>
+                        <input type="tel" id="empresa-telefone" placeholder="(00) 00000-0000">
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>Gestão de Dados</h3>
+                    <button class="btn-danger" onclick="clearAllData()">
+                        🗑️ Limpar Todos os Dados
+                    </button>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">
+                        Esta ação não pode ser desfeita. Todos os pedidos serão removidos permanentemente.
+                    </p>
+                </div>
+
+                <div class="settings-group">
+                    <h3>Sobre o Sistema</h3>
+                    <p style="color: var(--navy); margin-bottom: 0.5rem;">
+                        <strong>StationeryOS Premium</strong><br>
+                        Versão 2.0 - Sistema de Gestão para Papelaria Personalizada
+                    </p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">
+                        Desenvolvido com ❤️ para transformar a gestão do seu negócio artesanal.
+                    </p>
+                </div>
             </div>
         </section>
     </main>
@@ -1284,6 +1661,309 @@ ${EMPRESA_NOME}
                 openModal();
             }
         });
+
+        // === INITIALIZATION ===
+        document.addEventListener('DOMContentLoaded', () => {
+            render();
+            updateStats();
+
+            // Add welcome message if no orders
+            if (orders.length === 0) {
+                console.log('%c✨ StationeryOS Premium', 'color: #9CAF88; font-size: 20px; font-weight: bold;');
+                console.log('%cSistema inicializado com sucesso!', 'color: #2C3E50; font-size: 14px;');
+                console.log('%cAtalhos de teclado:', 'color: #2C3E50; font-size: 12px; font-weight: bold;');
+                console.log('%c  • Ctrl/Cmd + N: Novo Pedido', 'color: #636e72; font-size: 11px;');
+                console.log('%c  • ESC: Fechar modal', 'color: #636e72; font-size: 11px;');
+                console.log('%c  • Duplo clique no card: Editar', 'color: #636e72; font-size: 11px;');
+            }
+        });
+
+        // === VIEW NAVIGATION ===
+        let currentView = 'producao';
+
+        function showView(viewName) {
+            // Hide all views
+            document.querySelectorAll('.kanban-container, .content-view').forEach(view => {
+                view.style.display = 'none';
+            });
+
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Show selected view
+            if (viewName === 'producao') {
+                document.getElementById('view-producao').style.display = 'flex';
+            } else {
+                document.getElementById(`view-${viewName}`).style.display = 'block';
+            }
+
+            // Activate current nav item
+            event.target.closest('.nav-item').classList.add('active');
+            currentView = viewName;
+
+            // Update view-specific content
+            if (viewName === 'clientes') {
+                renderClients();
+            } else if (viewName === 'relatorios') {
+                renderReports();
+            }
+        }
+
+        // === CLIENTES VIEW ===
+        function renderClients() {
+            const clientsGrid = document.getElementById('clientsGrid');
+            
+            // Group orders by client
+            const clientsMap = {};
+            orders.forEach(order => {
+                if (!clientsMap[order.client]) {
+                    clientsMap[order.client] = {
+                        name: order.client,
+                        orders: [],
+                        totalSpent: 0
+                    };
+                }
+                clientsMap[order.client].orders.push(order);
+                clientsMap[order.client].totalSpent += order.value;
+            });
+
+            const clients = Object.values(clientsMap);
+
+            if (clients.length === 0) {
+                clientsGrid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
+                        <p style="font-size: 1.2rem; margin-bottom: 0.5rem;">📋 Nenhum cliente cadastrado ainda</p>
+                        <p style="font-size: 0.9rem;">Os clientes aparecerão aqui conforme você adiciona pedidos.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            clientsGrid.innerHTML = clients.map(client => `
+                <div class="client-card">
+                    <div class="client-name">${client.name}</div>
+                    <div class="client-stats">
+                        <div class="client-stat">
+                            <span>Pedidos</span>
+                            <strong>${client.orders.length}</strong>
+                        </div>
+                        <div class="client-stat">
+                            <span>Total Gasto</span>
+                            <strong>${formatCurrency(client.totalSpent)}</strong>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // === RELATÓRIOS VIEW ===
+        function renderReports() {
+            // Calculate statistics
+            const totalRevenue = orders.reduce((sum, order) => sum + order.value, 0);
+            const completedOrders = orders.filter(o => o.status === 'pronto').length;
+            const ongoingOrders = orders.filter(o => o.status !== 'pronto').length;
+            const avgTicket = orders.length > 0 ? totalRevenue / orders.length : 0;
+
+            // Update stats
+            document.getElementById('total-revenue').textContent = formatCurrency(totalRevenue);
+            document.getElementById('completed-orders').textContent = completedOrders;
+            document.getElementById('ongoing-orders').textContent = ongoingOrders;
+            document.getElementById('avg-ticket').textContent = formatCurrency(avgTicket);
+
+            // Render table
+            const tableBody = document.getElementById('ordersTableBody');
+            
+            if (orders.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                            Nenhum pedido registrado ainda
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            const statusLabels = {
+                'novos': 'Novo',
+                'producao': 'Produção',
+                'acabamento': 'Acabamento',
+                'pronto': 'Pronto'
+            };
+
+            tableBody.innerHTML = orders
+                .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+                .map(order => `
+                    <tr>
+                        <td><strong>${order.id.substring(0, 12)}...</strong></td>
+                        <td>${order.createdAt ? new Date(order.createdAt).toLocaleDateString('pt-BR') : '-'}</td>
+                        <td>${order.client}</td>
+                        <td>${order.product}</td>
+                        <td><strong>${formatCurrency(order.value)}</strong></td>
+                        <td><span class="status-badge status-${order.status}">${statusLabels[order.status]}</span></td>
+                        <td>${formatDate(order.deadline)}</td>
+                    </tr>
+                `).join('');
+        }
+
+        // === EXPORT REPORT ===
+        function exportReport() {
+            if (orders.length === 0) {
+                alert('Não há pedidos para exportar.');
+                return;
+            }
+
+            // Calculate totals
+            const totalRevenue = orders.reduce((sum, order) => sum + order.value, 0);
+            const completedOrders = orders.filter(o => o.status === 'pronto').length;
+            const avgTicket = totalRevenue / orders.length;
+
+            // Create CSV content
+            let csvContent = 'RELATÓRIO DE VENDAS - STATIONERYOS PREMIUM\n';
+            csvContent += `Data de Geração: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}\n\n`;
+            
+            csvContent += 'RESUMO GERAL\n';
+            csvContent += `Total de Pedidos: ${orders.length}\n`;
+            csvContent += `Pedidos Concluídos: ${completedOrders}\n`;
+            csvContent += `Receita Total: ${formatCurrency(totalRevenue)}\n`;
+            csvContent += `Ticket Médio: ${formatCurrency(avgTicket)}\n\n`;
+
+            csvContent += 'DETALHAMENTO DE PEDIDOS\n';
+            csvContent += 'ID;Data Criação;Cliente;Produto;Valor;Status;Prazo de Entrega\n';
+
+            orders.forEach(order => {
+                const createdDate = order.createdAt ? new Date(order.createdAt).toLocaleDateString('pt-BR') : '-';
+                const statusLabels = {
+                    'novos': 'Novo Pedido',
+                    'producao': 'Em Produção',
+                    'acabamento': 'Em Acabamento',
+                    'pronto': 'Pronto para Envio'
+                };
+                
+                csvContent += `${order.id};${createdDate};${order.client};${order.product};R$ ${order.value.toFixed(2)};${statusLabels[order.status]};${formatDate(order.deadline)}\n`;
+            });
+
+            // Group by status
+            csvContent += '\n\nPEDIDOS POR STATUS\n';
+            const byStatus = {
+                'novos': orders.filter(o => o.status === 'novos'),
+                'producao': orders.filter(o => o.status === 'producao'),
+                'acabamento': orders.filter(o => o.status === 'acabamento'),
+                'pronto': orders.filter(o => o.status === 'pronto')
+            };
+
+            Object.entries(byStatus).forEach(([status, items]) => {
+                const statusLabels = {
+                    'novos': 'Novos Pedidos',
+                    'producao': 'Em Produção',
+                    'acabamento': 'Em Acabamento',
+                    'pronto': 'Prontos para Envio'
+                };
+                csvContent += `\n${statusLabels[status]}: ${items.length} pedidos\n`;
+                items.forEach(item => {
+                    csvContent += `  - ${item.client} | ${item.product} | ${formatCurrency(item.value)}\n`;
+                });
+            });
+
+            // Group by client
+            csvContent += '\n\nTOP CLIENTES\n';
+            const clientsMap = {};
+            orders.forEach(order => {
+                if (!clientsMap[order.client]) {
+                    clientsMap[order.client] = { count: 0, total: 0 };
+                }
+                clientsMap[order.client].count++;
+                clientsMap[order.client].total += order.value;
+            });
+
+            const topClients = Object.entries(clientsMap)
+                .sort((a, b) => b[1].total - a[1].total)
+                .slice(0, 10);
+
+            topClients.forEach(([client, data], index) => {
+                csvContent += `${index + 1}. ${client} - ${data.count} pedidos - ${formatCurrency(data.total)}\n`;
+            });
+
+            // Create download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            const fileName = `StationeryOS_Relatorio_${new Date().toISOString().split('T')[0]}.csv`;
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', fileName);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Show success message
+            showNotification('✓ Relatório exportado com sucesso!', 'success');
+        }
+
+        // === CONFIGURAÇÕES ===
+        function clearAllData() {
+            const confirmed = confirm(
+                '⚠️ ATENÇÃO!\n\n' +
+                'Esta ação irá EXCLUIR PERMANENTEMENTE todos os pedidos do sistema.\n\n' +
+                'Tem certeza que deseja continuar?\n\n' +
+                'Esta ação NÃO PODE ser desfeita!'
+            );
+
+            if (confirmed) {
+                const doubleConfirm = confirm(
+                    'CONFIRMAÇÃO FINAL\n\n' +
+                    'Digite "CONFIRMAR" mentalmente e clique em OK para prosseguir.\n\n' +
+                    'Todos os ' + orders.length + ' pedidos serão APAGADOS.'
+                );
+
+                if (doubleConfirm) {
+                    orders = [];
+                    save();
+                    showNotification('Todos os dados foram removidos.', 'warning');
+                    
+                    // Return to production view
+                    showView('producao');
+                    document.querySelector('.nav-item').click();
+                }
+            }
+        }
+
+        // === NOTIFICATION SYSTEM ===
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            const colors = {
+                'success': 'var(--sage)',
+                'warning': 'var(--terracotta)',
+                'info': 'var(--blush)'
+            };
+
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 2rem;
+                right: 2rem;
+                background: ${colors[type] || colors.success};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: var(--radius-sm);
+                box-shadow: var(--shadow-lift);
+                font-weight: 600;
+                font-size: 0.95rem;
+                animation: slideInUp 0.3s ease-out;
+                z-index: 10000;
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
 
         // === INITIALIZATION ===
         document.addEventListener('DOMContentLoaded', () => {
