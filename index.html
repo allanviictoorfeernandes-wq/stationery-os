@@ -1,550 +1,781 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StationeryOS | Production Manager</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>StationeryOS - Kanban de Produção</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Palette Premium Craft */
-            --bg-app: #fdfbf7;
-            --sidebar-bg: #ffffff;
-            --card-bg: #ffffff;
-            --column-bg: #f1f3f5;
-            --text-main: #2d3436;
-            --text-muted: #636e72;
-            --border-color: #e9ecef;
-            
-            /* Stationery Accents */
-            --accent-pink: #fab1a0;
-            --accent-blue: #a29bfe;
-            --accent-green: #55efc4;
-            --primary: #6c5ce7;
-            --danger: #ff7675;
-
-            /* Effects */
-            --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.05);
-            --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --color-bg: #F9F8F6;
+            --color-kraft: #E3DAC9;
+            --color-sage: #9CAF88;
+            --color-rose: #C9ADA7;
+            --color-serenity: #A8DADC;
+            --color-text: #2D2D2A;
+            --color-text-light: #6B6B66;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
             --radius: 12px;
+            --spacing: 1.5rem;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            background-color: var(--bg-app);
-            color: var(--text-main);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+            min-height: 100vh;
         }
 
-        /* --- SIDEBAR --- */
-        aside {
-            width: 260px;
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            padding: 2rem 1.5rem;
-            z-index: 10;
-        }
-
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--primary);
+        .header {
+            text-align: center;
             margin-bottom: 3rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
-        .logo span { color: var(--text-main); font-weight: 300; }
-
-        .nav-menu { flex: 1; }
-        .nav-item {
-            padding: 0.8rem 1rem;
-            border-radius: var(--radius);
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 500;
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-text);
             margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: var(--transition);
-            cursor: pointer;
+            letter-spacing: -0.02em;
         }
 
-        .nav-item.active { background: #f3f0ff; color: var(--primary); }
-        .nav-item:hover:not(.active) { background: #f8f9fa; color: var(--text-main); }
-
-        /* --- MAIN AREA --- */
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+        .header p {
+            color: var(--color-text-light);
+            font-size: 1rem;
         }
 
-        header {
-            background: #fff;
-            padding: 1.2rem 2.5rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .metrics { display: flex; gap: 2rem; }
-        .metric-item span { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; display: block; }
-        .metric-item strong { font-size: 1.2rem; color: var(--text-main); }
-
-        .btn-create {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.7rem 1.4rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 4px 10px rgba(108, 92, 231, 0.2);
-        }
-
-        .btn-create:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(108, 92, 231, 0.3); }
-
-        /* --- KANBAN BOARD --- */
-        .kanban-container {
-            display: flex;
-            gap: 1.5rem;
-            padding: 2rem 2.5rem;
-            overflow-x: auto;
-            flex: 1;
+        .board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing);
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .column {
-            background: var(--column-bg);
-            min-width: 300px;
-            width: 300px;
-            border-radius: 16px;
-            display: flex;
-            flex-direction: column;
-            max-height: 100%;
-            transition: var(--transition);
-            border: 2px solid transparent;
-        }
-
-        .column.drag-over { background: #ebfbee; border-color: var(--accent-green); }
-
-        .column-header {
-            padding: 1.2rem;
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .count-badge {
-            background: #dee2e6;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            color: var(--text-main);
-        }
-
-        .task-list {
-            padding: 0.8rem;
-            flex: 1;
-            overflow-y: auto;
-            min-height: 100px;
-        }
-
-        /* --- CARDS --- */
-        .card {
-            background: var(--card-bg);
+            background: white;
             border-radius: var(--radius);
             padding: 1.25rem;
-            margin-bottom: 1rem;
-            box-shadow: var(--shadow-soft);
-            cursor: grab;
-            transition: var(--transition);
-            border: 1px solid transparent;
-            position: relative;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            min-height: 500px;
+            transition: all 0.3s ease;
         }
 
-        .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: var(--accent-blue); }
-        .card:active { cursor: grabbing; }
-
-        .card-tag {
-            font-size: 0.65rem;
-            font-weight: 800;
-            padding: 3px 10px;
-            border-radius: 50px;
-            display: inline-block;
-            margin-bottom: 0.8rem;
-            text-transform: uppercase;
+        .column.drag-over {
+            background: rgba(156, 175, 136, 0.05);
+            box-shadow: 0 0 0 2px var(--color-sage);
         }
 
-        .tag-order { background: var(--accent-pink); color: #fff; }
-        .tag-prod { background: var(--accent-blue); color: #fff; }
-        .tag-finish { background: var(--accent-green); color: #fff; }
-
-        .card-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; }
-        .card-client { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; }
-        
-        .card-meta {
+        .column-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 1rem;
-            border-top: 1px solid #f8f9fa;
-            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--color-kraft);
         }
 
-        .card-value { font-weight: 700; color: var(--text-main); }
-        .card-date { color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+        .column-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .column-count {
+            background: var(--color-kraft);
+            color: var(--color-text);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .add-card-btn {
+            background: var(--color-sage);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .add-card-btn:hover {
+            background: #8A9F75;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .cards-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .cards-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .cards-container::-webkit-scrollbar-thumb {
+            background: var(--color-kraft);
+            border-radius: 3px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #FFFFFF 0%, #FAFAF9 100%);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            cursor: grab;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--color-sage);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-id {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--color-sage);
+            background: rgba(156, 175, 136, 0.15);
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+        }
 
         .card-actions {
-            margin-top: 1rem;
             display: flex;
-            gap: 8px;
+            gap: 0.5rem;
         }
 
-        .btn-action {
-            flex: 1;
-            padding: 6px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            background: #fff;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-action:hover { background: #f8f9fa; border-color: var(--text-muted); }
-        .btn-notify { color: var(--primary); border-color: #d1ccf9; background: #f3f0ff; }
-        .btn-notify:hover { background: var(--primary); color: #fff; }
-
-        .btn-delete-card {
-            position: absolute;
-            top: 10px;
-            right: 10px;
+        .card-action-btn {
             background: none;
             border: none;
-            color: #dee2e8;
             cursor: pointer;
-            font-size: 1rem;
-            transition: 0.2s;
+            font-size: 1.1rem;
+            padding: 0.25rem;
+            opacity: 0.6;
+            transition: all 0.2s ease;
         }
-        .btn-delete-card:hover { color: var(--danger); }
 
-        /* --- MODAL --- */
+        .card-action-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .card-client {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-product {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            margin-bottom: 1rem;
+        }
+
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--color-kraft);
+        }
+
+        .card-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-sage);
+        }
+
+        .card-deadline {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .notify-btn {
+            width: 100%;
+            background: var(--color-serenity);
+            color: var(--color-text);
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .notify-btn:hover {
+            background: #91CDD0;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(4px);
-            z-index: 100;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
             justify-content: center;
             align-items: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
         }
 
         .modal-content {
-            background: #fff;
-            width: 450px;
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            animation: modalIn 0.3s ease-out;
-        }
-
-        @keyframes modalIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-
-        .modal h2 { margin-bottom: 1.5rem; font-size: 1.4rem; color: var(--text-main); }
-
-        .form-group { margin-bottom: 1.2rem; }
-        label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-muted); text-transform: uppercase; }
-        input, select {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            max-width: 500px;
             width: 100%;
-            padding: 0.8rem;
-            border: 1.5px solid var(--border-color);
-            border-radius: 10px;
-            outline: none;
-            font-size: 0.9rem;
-            transition: 0.2s;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlideIn 0.3s ease;
         }
-        input:focus { border-color: var(--primary); }
 
-        .modal-footer { display: flex; gap: 1rem; margin-top: 2rem; }
-        .btn-cancel { flex: 1; padding: 0.8rem; border-radius: 10px; border: none; background: #f1f3f5; font-weight: 700; cursor: pointer; }
-        .btn-save { flex: 2; padding: 0.8rem; border-radius: 10px; border: none; background: var(--primary); color: #fff; font-weight: 700; cursor: pointer; }
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--color-text);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--color-kraft);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--color-sage);
+            box-shadow: 0 0 0 3px rgba(156, 175, 136, 0.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.875rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--color-sage);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #8A9F75;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--color-kraft);
+            color: var(--color-text);
+        }
+
+        .btn-secondary:hover {
+            background: #D4CDB9;
+        }
+
+        /* FAB (Floating Action Button) */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--color-rose);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.75rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fab:hover {
+            background: #B89D97;
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .board {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .fab {
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="header">
+        <h1>✨ StationeryOS</h1>
+        <p>Sistema de Gestão Visual para Papelaria Personalizada</p>
+    </div>
 
-    <aside>
-        <div class="logo">Stationery<span>OS</span></div>
-        <nav class="nav-menu">
-            <a class="nav-item active">📦 Produção</a>
-            <a class="nav-item">💎 Clientes</a>
-            <a class="nav-item">📈 Relatórios</a>
-            <a class="nav-item">⚙️ Ajustes</a>
-        </nav>
-    </aside>
-
-    <main>
-        <header>
-            <div class="metrics">
-                <div class="metric-item"><span>Total Pedidos</span><strong id="stat-total">0</strong></div>
-                <div class="metric-item"><span>Vencimento Próximo</span><strong id="stat-due" style="color: var(--danger)">0</strong></div>
+    <div class="board" id="kanbanBoard">
+        <div class="column" data-status="novo">
+            <div class="column-header">
+                <div class="column-title">
+                    📥 Novos Pedidos
+                    <span class="column-count" data-count="novo">0</span>
+                </div>
+                <button class="add-card-btn" onclick="openModal('novo')">+ Adicionar</button>
             </div>
-            <button class="btn-create" onclick="openModal()">+ Novo Pedido</button>
-        </header>
+            <div class="cards-container" data-status="novo"></div>
+        </div>
 
-        <section class="kanban-container">
-            <div class="column" data-status="novos">
-                <div class="column-header">Novos Pedidos <span class="count-badge">0</span></div>
-                <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
+        <div class="column" data-status="producao">
+            <div class="column-header">
+                <div class="column-title">
+                    🖨️ Em Produção
+                    <span class="column-count" data-count="producao">0</span>
+                </div>
+                <button class="add-card-btn" onclick="openModal('producao')">+ Adicionar</button>
             </div>
+            <div class="cards-container" data-status="producao"></div>
+        </div>
 
-            <div class="column" data-status="producao">
-                <div class="column-header">Em Produção <span class="count-badge">0</span></div>
-                <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
+        <div class="column" data-status="acabamento">
+            <div class="column-header">
+                <div class="column-title">
+                    ✂️ Acabamento
+                    <span class="column-count" data-count="acabamento">0</span>
+                </div>
+                <button class="add-card-btn" onclick="openModal('acabamento')">+ Adicionar</button>
             </div>
+            <div class="cards-container" data-status="acabamento"></div>
+        </div>
 
-            <div class="column" data-status="acabamento">
-                <div class="column-header">Acabamento <span class="count-badge">0</span></div>
-                <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
+        <div class="column" data-status="pronto">
+            <div class="column-header">
+                <div class="column-title">
+                    📦 Pronto p/ Envio
+                    <span class="column-count" data-count="pronto">0</span>
+                </div>
+                <button class="add-card-btn" onclick="openModal('pronto')">+ Adicionar</button>
             </div>
+            <div class="cards-container" data-status="pronto"></div>
+        </div>
+    </div>
 
-            <div class="column" data-status="pronto">
-                <div class="column-header">Pronto / Envio <span class="count-badge">0</span></div>
-                <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
-            </div>
-        </section>
-    </main>
+    <button class="fab" onclick="openModal('novo')" title="Novo Pedido">+</button>
 
-    <div id="modal" class="modal">
+    <!-- Modal -->
+    <div class="modal" id="cardModal">
         <div class="modal-content">
-            <h2 id="modalTitle">Gerenciar Pedido</h2>
-            <form id="orderForm">
-                <input type="hidden" id="orderId">
+            <h2 class="modal-header" id="modalTitle">Novo Pedido</h2>
+            <form id="cardForm">
                 <div class="form-group">
-                    <label>Produto / Serviço</label>
-                    <input type="text" id="product" placeholder="Ex: Planner 2026 Floral" required>
+                    <label for="clientName">Nome do Cliente</label>
+                    <input type="text" id="clientName" required placeholder="Ex: Maria Silva">
                 </div>
                 <div class="form-group">
-                    <label>Cliente (Nome ou Empresa)</label>
-                    <input type="text" id="client" placeholder="Ex: Maria Oliveira" required>
+                    <label for="product">Produto</label>
+                    <input type="text" id="product" required placeholder="Ex: Agenda 2024 Floral">
                 </div>
-                <div style="display: flex; gap: 1rem">
-                    <div class="form-group" style="flex: 1">
-                        <label>Valor (R$)</label>
-                        <input type="number" step="0.01" id="value" placeholder="0.00" required>
-                    </div>
-                    <div class="form-group" style="flex: 1">
-                        <label>Prazo de Entrega</label>
-                        <input type="date" id="deadline" required>
-                    </div>
+                <div class="form-group">
+                    <label for="value">Valor (R$)</label>
+                    <input type="number" id="value" required step="0.01" placeholder="Ex: 150.00">
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
-                    <button type="submit" class="btn-save">Salvar Pedido</button>
+                <div class="form-group">
+                    <label for="deadline">Prazo de Entrega</label>
+                    <input type="date" id="deadline" required>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status">
+                        <option value="novo">📥 Novos Pedidos</option>
+                        <option value="producao">🖨️ Em Produção</option>
+                        <option value="acabamento">✂️ Acabamento</option>
+                        <option value="pronto">📦 Pronto p/ Envio</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        // Nome da empresa para o corpo do e-mail
-        const EMPRESA_NOME = "Papelaria Criativa Premium";
+        // State Management
+        let orders = JSON.parse(localStorage.getItem('stationeryOrders')) || [];
+        let editingOrderId = null;
+        let draggedElement = null;
 
-        let orders = JSON.parse(localStorage.getItem('stationery_db')) || [];
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllCards();
+            setupDragAndDrop();
+            updateAllCounts();
+        });
 
-        // --- CORE FUNCTIONS ---
-
-        function save() {
-            localStorage.setItem('stationery_db', JSON.stringify(orders));
-            render();
+        // Generate unique ID
+        function generateId() {
+            const maxId = orders.reduce((max, order) => {
+                const num = parseInt(order.id.replace('#', ''));
+                return num > max ? num : max;
+            }, 0);
+            return `#${String(maxId + 1).padStart(3, '0')}`;
         }
 
-        function openModal(id = null) {
-            const modal = document.getElementById('modal');
-            const form = document.getElementById('orderForm');
-            const title = document.getElementById('modalTitle');
-            
+        // Open Modal
+        function openModal(status = 'novo', orderId = null) {
+            const modal = document.getElementById('cardModal');
+            const form = document.getElementById('cardForm');
+            const modalTitle = document.getElementById('modalTitle');
+
             form.reset();
-            if (id) {
-                const order = orders.find(o => o.id === id);
-                title.innerText = "Editar Pedido";
-                document.getElementById('orderId').value = order.id;
-                document.getElementById('product').value = order.product;
-                document.getElementById('client').value = order.client;
-                document.getElementById('value').value = order.value;
-                document.getElementById('deadline').value = order.deadline;
+
+            if (orderId) {
+                // Edit mode
+                const order = orders.find(o => o.id === orderId);
+                if (order) {
+                    modalTitle.textContent = 'Editar Pedido';
+                    document.getElementById('clientName').value = order.client;
+                    document.getElementById('product').value = order.product;
+                    document.getElementById('value').value = order.value;
+                    document.getElementById('deadline').value = order.deadline;
+                    document.getElementById('status').value = order.status;
+                    editingOrderId = orderId;
+                }
             } else {
-                title.innerText = "Novo Pedido";
-                document.getElementById('orderId').value = "";
+                // Add mode
+                modalTitle.textContent = 'Novo Pedido';
+                document.getElementById('status').value = status;
+                editingOrderId = null;
             }
-            modal.style.display = "flex";
+
+            modal.classList.add('active');
         }
 
+        // Close Modal
         function closeModal() {
-            document.getElementById('modal').style.display = "none";
+            document.getElementById('cardModal').classList.remove('active');
+            editingOrderId = null;
         }
 
-        document.getElementById('orderForm').onsubmit = (e) => {
+        // Form Submit Handler
+        document.getElementById('cardForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const id = document.getElementById('orderId').value;
-            const data = {
+
+            const orderData = {
+                id: editingOrderId || generateId(),
+                client: document.getElementById('clientName').value,
                 product: document.getElementById('product').value,
-                client: document.getElementById('client').value,
                 value: parseFloat(document.getElementById('value').value),
-                deadline: document.getElementById('deadline').value
+                deadline: document.getElementById('deadline').value,
+                status: document.getElementById('status').value
             };
 
-            if (id) {
-                orders = orders.map(o => o.id === id ? { ...o, ...data } : o);
+            if (editingOrderId) {
+                // Update existing order
+                const index = orders.findIndex(o => o.id === editingOrderId);
+                orders[index] = orderData;
             } else {
-                orders.push({
-                    ...data,
-                    id: 'ORD-' + Date.now(),
-                    status: 'novos'
-                });
+                // Add new order
+                orders.push(orderData);
             }
-            save();
-            closeModal();
-        };
 
-        function deleteOrder(id) {
-            if (confirm("Deseja realmente excluir este pedido? Esta ação não pode ser desfeita.")) {
-                orders = orders.filter(o => o.id !== id);
-                save();
-            }
+            saveToLocalStorage();
+            renderAllCards();
+            updateAllCounts();
+            closeModal();
+        });
+
+        // Save to LocalStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('stationeryOrders', JSON.stringify(orders));
         }
 
-        // --- EMAIL INTEGRATION ---
+        // Render all cards
+        function renderAllCards() {
+            // Clear all containers
+            document.querySelectorAll('.cards-container').forEach(container => {
+                container.innerHTML = '';
+            });
 
-        function notifyClient(id) {
-            const order = orders.find(o => o.id === id);
-            const statusNames = {
-                'novos': 'Novos Pedidos (Aguardando Fila)',
-                'producao': 'Em Produção (Impressão/Corte)',
-                'acabamento': 'Montagem e Acabamento Final',
-                'pronto': 'Pronto para Retirada ou Envio'
+            // Render cards by status
+            orders.forEach(order => {
+                const container = document.querySelector(`.cards-container[data-status="${order.status}"]`);
+                if (container) {
+                    container.appendChild(createCardElement(order));
+                }
+            });
+        }
+
+        // Create card element
+        function createCardElement(order) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.draggable = true;
+            card.dataset.orderId = order.id;
+
+            const statusLabels = {
+                'novo': 'Aguardando Confirmação',
+                'producao': 'Em Produção',
+                'acabamento': 'Fase de Acabamento',
+                'pronto': 'Pronto para Envio'
             };
 
-            const statusAtual = statusNames[order.status];
-            const dataFormatada = order.deadline.split('-').reverse().join('/');
-            
-            const subject = encodeURIComponent(`Atualização do Pedido: ${order.product}`);
-            const body = encodeURIComponent(
-                `Olá ${order.client},\n\n` +
-                `Temos uma atualização sobre o seu pedido de "${order.product}".\n` +
-                `Ele encontra-se atualmente na fase: ${statusAtual}.\n` +
-                `Previsão de entrega: ${dataFormatada}.\n\n` +
-                `Atenciosamente,\n` +
-                `${EMPRESA_NOME}`
-            );
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-id">${order.id}</div>
+                    <div class="card-actions">
+                        <button class="card-action-btn" onclick="openModal('${order.status}', '${order.id}')" title="Editar">✏️</button>
+                        <button class="card-action-btn" onclick="deleteOrder('${order.id}')" title="Excluir">🗑️</button>
+                    </div>
+                </div>
+                <div class="card-client">${order.client}</div>
+                <div class="card-product">${order.product}</div>
+                <div class="card-details">
+                    <div class="card-value">R$ ${order.value.toFixed(2)}</div>
+                    <div class="card-deadline">📅 ${formatDate(order.deadline)}</div>
+                </div>
+                <button class="notify-btn" onclick="notifyClient('${order.id}')">✉️ Notificar Cliente</button>
+            `;
 
-            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+            return card;
         }
 
-        // --- DRAG AND DROP ---
-
-        function allowDrop(ev) {
-            ev.preventDefault();
-            ev.target.closest('.column').classList.add('drag-over');
+        // Format date
+        function formatDate(dateString) {
+            const [year, month, day] = dateString.split('-');
+            return `${day}/${month}/${year}`;
         }
 
-        function dragLeave(ev) {
-            ev.target.closest('.column').classList.remove('drag-over');
+        // Delete order
+        function deleteOrder(orderId) {
+            if (confirm('Tem certeza que deseja excluir este pedido?')) {
+                orders = orders.filter(o => o.id !== orderId);
+                saveToLocalStorage();
+                renderAllCards();
+                updateAllCounts();
+            }
         }
 
-        function drag(ev) {
-            ev.dataTransfer.setData("text", ev.target.id);
+        // Notify client via email
+        function notifyClient(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const statusMessages = {
+                'novo': 'seu pedido foi recebido e está aguardando confirmação',
+                'producao': 'seu pedido está em produção',
+                'acabamento': 'seu pedido está na fase de acabamento',
+                'pronto': 'seu pedido está pronto para envio'
+            };
+
+            const subject = `Status do seu pedido: ${order.product}`;
+            const body = `Olá ${order.client}!
+
+Gostaríamos de informar que ${statusMessages[order.status]}.
+
+📦 Pedido: ${order.id}
+📝 Produto: ${order.product}
+💰 Valor: R$ ${order.value.toFixed(2)}
+📅 Prazo de Entrega: ${formatDate(order.deadline)}
+
+Estamos trabalhando com todo carinho no seu pedido! 
+
+Qualquer dúvida, estamos à disposição.
+
+Com carinho,
+Equipe StationeryOS`;
+
+            const mailtoLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoLink;
         }
 
-        function drop(ev) {
-            ev.preventDefault();
-            const col = ev.target.closest('.column');
-            col.classList.remove('drag-over');
-            
-            const id = ev.dataTransfer.getData("text");
-            const newStatus = col.dataset.status;
-
-            orders = orders.map(o => o.id === id ? { ...o, status: newStatus } : o);
-            save();
-        }
-
-        // --- RENDER ---
-
-        function render() {
-            // Limpar listas
-            document.querySelectorAll('.task-list').forEach(list => list.innerHTML = '');
-            
-            let totalVal = 0;
-            let dueSoon = 0;
-            const today = new Date().toISOString().split('T')[0];
+        // Update column counts
+        function updateAllCounts() {
+            const counts = {
+                novo: 0,
+                producao: 0,
+                acabamento: 0,
+                pronto: 0
+            };
 
             orders.forEach(order => {
-                totalVal++;
-                if (order.deadline <= today && order.status !== 'pronto') dueSoon++;
-
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.id = order.id;
-                card.draggable = true;
-                card.ondragstart = drag;
-                card.ondblclick = () => openModal(order.id);
-
-                // Determinar classe da tag
-                let tagClass = 'tag-order';
-                if(order.status === 'producao') tagClass = 'tag-prod';
-                if(order.status === 'acabamento' || order.status === 'pronto') tagClass = 'tag-finish';
-
-                card.innerHTML = `
-                    <button class="btn-delete-card" onclick="deleteOrder('${order.id}')">&times;</button>
-                    <span class="card-tag ${tagClass}">${order.status}</span>
-                    <div class="card-title">${order.product}</div>
-                    <div class="card-client">${order.client}</div>
-                    <div class="card-meta">
-                        <span class="card-value">R$ ${order.value.toFixed(2)}</span>
-                        <span class="card-date">📅 ${order.deadline.split('-').reverse().join('/')}</span>
-                    </div>
-                    <div class="card-actions">
-                        <button class="btn-action btn-notify" onclick="notifyClient('${order.id}')">📧 Notificar Cliente</button>
-                    </div>
-                `;
-
-                const column = document.querySelector(`[data-status="${order.status}"] .task-list`);
-                if (column) column.appendChild(card);
+                counts[order.status]++;
             });
 
-            // Update Stats
-            document.getElementById('stat-total').innerText = orders.length;
-            document.getElementById('stat-due').innerText = dueSoon;
-
-            // Update Column Badges
-            document.querySelectorAll('.column').forEach(col => {
-                const status = col.dataset.status;
-                const count = orders.filter(o => o.status === status).length;
-                col.querySelector('.count-badge').innerText = count;
+            Object.keys(counts).forEach(status => {
+                const countElement = document.querySelector(`[data-count="${status}"]`);
+                if (countElement) {
+                    countElement.textContent = counts[status];
+                }
             });
         }
 
-        // Initial Load
-        render();
+        // Drag and Drop Setup
+        function setupDragAndDrop() {
+            const cards = document.querySelectorAll('.card');
+            const containers = document.querySelectorAll('.cards-container');
 
+            // Card drag events
+            document.addEventListener('dragstart', (e) => {
+                if (e.target.classList.contains('card')) {
+                    e.target.classList.add('dragging');
+                    draggedElement = e.target;
+                }
+            });
+
+            document.addEventListener('dragend', (e) => {
+                if (e.target.classList.contains('card')) {
+                    e.target.classList.remove('dragging');
+                    draggedElement = null;
+                }
+            });
+
+            // Container drag events
+            containers.forEach(container => {
+                container.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    const column = container.closest('.column');
+                    column.classList.add('drag-over');
+                });
+
+                container.addEventListener('dragleave', (e) => {
+                    const column = container.closest('.column');
+                    if (!column.contains(e.relatedTarget)) {
+                        column.classList.remove('drag-over');
+                    }
+                });
+
+                container.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const column = container.closest('.column');
+                    column.classList.remove('drag-over');
+
+                    if (draggedElement) {
+                        const orderId = draggedElement.dataset.orderId;
+                        const newStatus = container.dataset.status;
+                        
+                        // Update order status
+                        const order = orders.find(o => o.id === orderId);
+                        if (order) {
+                            order.status = newStatus;
+                            saveToLocalStorage();
+                            renderAllCards();
+                            updateAllCounts();
+                        }
+                    }
+                });
+            });
+        }
+
+        // Close modal on outside click
+        document.getElementById('cardModal').addEventListener('click', (e) => {
+            if (e.target.id === 'cardModal') {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
